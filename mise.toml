@@ -1,0 +1,6 @@
+[tools]
+elixir = "latest"
+erlang = "latest"
+zig = "0.15.2"
+npm = "latest"
+node = "latest"
