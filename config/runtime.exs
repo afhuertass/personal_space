@@ -1,5 +1,8 @@
 import Config
 
+config :telegram_ex,
+  apersonal_space: System.fetch_env!("TELEGRAM_TOKEN")
+
 if System.get_env("PHX_SERVER") do
   config :personal_space, PersonalSpaceWeb.Endpoint, server: true
 end
