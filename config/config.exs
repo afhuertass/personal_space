@@ -7,6 +7,8 @@
 # General application configuration
 import Config
 
+config :elixir, :time_zone_database, Tz.TimeZoneDatabase
+
 config :personal_space,
   ecto_repos: [PersonalSpace.Repo],
   event_stores: [PersonalSpace.CommandedEventStore],

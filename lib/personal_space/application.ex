@@ -11,6 +11,9 @@ defmodule PersonalSpace.Application do
       # Poller process
       PersonalSpace.AircraftPoller,
 
+      # TelegranBot server
+      PersonalSpace.Bot,
+
       # event sourcing guys
       PersonalSpace.CommandedApp,
       PersonalSpace.CommandedSupervisor,
