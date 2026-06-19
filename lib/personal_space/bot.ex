@@ -1,8 +1,12 @@
 defmodule PersonalSpace.Bot do
   use TelegramEx, name: :apersonal_space
+
   alias PersonalSpace.Zones.Queries
+
+  alias PersonalSpace.CountryFlags
   # /start
-  def handle(%{"message" => %{"text" => "/start", "chat" => chat}}, context) do
+
+  def handle_message(%{"message" => %{"text" => "/start", "chat" => chat}}, context) do
     context
     |> Message.text("""
     ✈️ *Welcome to Personal Space* ✈️
@@ -18,8 +22,18 @@ defmodule PersonalSpace.Bot do
     |> Message.send(chat["id"])
   end
 
+  def handle_message(%{text: "/1h", chat: chat}, context) do
+    aircrafts = Queries.aircrafts_past1h()
+
+    text = format_aircraft_list(aircrafts, "past 1 hour")
+
+    context
+    |> Message.text(text)
+    |> Message.send(chat["id"])
+  end
+
   # /24h
-  def handle(%{"message" => %{"text" => "/24h", "chat" => chat}}, context) do
+  def handle_message(%{text: "/24h", chat: chat}, context) do
     aircrafts = Queries.aircrafts_past24h()
 
     text = format_aircraft_list(aircrafts, "past 24 hours")
@@ -30,8 +44,8 @@ defmodule PersonalSpace.Bot do
   end
 
   # /12h
-  def handle(%{"message" => %{"text" => "/12h", "chat" => chat}}, context) do
-    aircrafts = Queries.aicrafts_past12h()
+  def handle_message(%{text: "/12h", chat: chat}, context) do
+    aircrafts = Queries.aircrafts_past12h()
 
     text = format_aircraft_list(aircrafts, "past 12 hours")
 
@@ -41,10 +55,18 @@ defmodule PersonalSpace.Bot do
   end
 
   # /howfar
-  def handle(%{"message" => %{"text" => "/howfar", "chat" => chat}}, context) do
+  def handle_message(%{text: "/howfar", chat: chat}, context) do
     # TODO: implement furthest aircraft query
+    {icao24, country, _, entered_at, distance} = Queries.furthest_plane()
+
+    time_formatted = format_helsinki_time(entered_at)
+    flag = CountryFlags.get(country)
+
+    info_formatted =
+      "✈️ Aircraft '#{icao24}' - #{flag} first detected at: #{distance}Km 🕐 #{time_formatted}   "
+
     context
-    |> Message.text("🔭 Furthest aircraft: coming soon\\!")
+    |> Message.text(info_formatted)
     |> Message.send(chat["id"])
   end
 
@@ -59,11 +81,19 @@ defmodule PersonalSpace.Bot do
 
     rows =
       aircrafts
-      |> Enum.map(fn a ->
-        "🛩 `#{a.icao24}` \\- #{a.origin_country} \\| alt: #{a.baro_altitude}m \\| speed: #{a.velocity}m\\/s"
+      |> Enum.map(fn {icao24, country, _, entered_at} ->
+        flag = CountryFlags.get(country)
+        formatted_time = format_helsinki_time(entered_at)
+        "🛩 `#{icao24}` - #{country} #{flag} - 🕐 #{formatted_time}"
       end)
       |> Enum.join("\n")
 
     header <> rows
+  end
+
+  defp format_helsinki_time(%DateTime{} = dt) do
+    dt
+    |> DateTime.shift_zone!("Europe/Helsinki")
+    |> Calendar.strftime("%H:%M %d/%m")
   end
 end

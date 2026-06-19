@@ -9,11 +9,14 @@ defmodule PersonalSpace.Application do
   def start(_type, _args) do
     children = [
       # Poller process
-      PersonalSpace.AircraftPoller,
+      # PersonalSpace.AircraftPoller,
+
+      # TelegranBot server
+      PersonalSpace.Bot,
 
       # event sourcing guys
-      PersonalSpace.CommandedApp,
-      PersonalSpace.CommandedSupervisor,
+      # PersonalSpace.CommandedApp,
+      # PersonalSpace.CommandedSupervisor,
 
       ###
       PersonalSpaceWeb.Telemetry,
