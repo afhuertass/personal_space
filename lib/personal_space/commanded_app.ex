@@ -5,4 +5,6 @@ defmodule PersonalSpace.CommandedApp do
       adapter: Commanded.EventStore.Adapters.EventStore,
       event_store: PersonalSpace.CommandedEventStore
     ]
+
+  router(PersonalSpace.Zones.ZoneRouter)
 end

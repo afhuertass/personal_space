@@ -21,7 +21,7 @@ defmodule PersonalSpace.MixProject do
   def application do
     [
       mod: {PersonalSpace.Application, []},
-      extra_applications: [:logger, :runtime_tools]
+      extra_applications: [:logger, :runtime_tools, :eventstore, :ssl]
     ]
   end
 

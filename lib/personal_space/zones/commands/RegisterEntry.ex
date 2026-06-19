@@ -12,6 +12,7 @@ defmodule PersonalSpace.Zones.Commands.RegisterEntry do
     :latitude,
     :baro_altitude,
     :on_ground,
-    :velocity
+    :velocity,
+    :entered_at
   ]
 end

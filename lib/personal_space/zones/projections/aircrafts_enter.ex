@@ -7,7 +7,9 @@ defmodule PersonalSpace.Zones.Projections.AircraftsEnter do
     field :origin_country, :string
     field :velocity, :float
     field :baro_altitude, :float
-    field :entered_at, :utc_datetime
+    field :entered_at, :utc_datetime_usec
+    field :latitude, :float
+    field :longitude, :float
 
     timestamps()
   end

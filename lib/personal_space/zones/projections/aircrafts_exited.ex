@@ -7,9 +7,8 @@ defmodule PersonalSpace.Zones.Projections.AircraftsExited do
     field :origin_country, :string
     field :velocity, :float
     field :baro_altitude, :float
-    field :entered_at, :utc_datetime
+    field :occurred_at, :utc_datetime_usec
 
     timestamps()
   end
 end
-

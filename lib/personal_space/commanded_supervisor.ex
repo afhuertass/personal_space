@@ -9,6 +9,8 @@ defmodule PersonalSpace.CommandedSupervisor do
   def init(_options) do
     children = [
       # Here goes my future processess
+      PersonalSpace.Zones.Projectors.AircraftExited,
+      PersonalSpace.Zones.Projectors.AircraftsEntered
     ]
 
     Supervisor.init(children, strategy: :one_for_one)
