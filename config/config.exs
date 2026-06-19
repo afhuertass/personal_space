@@ -9,6 +9,7 @@ import Config
 
 config :personal_space,
   ecto_repos: [PersonalSpace.Repo],
+  event_stores: [PersonalSpace.CommandedEventStore],
   generators: [timestamp_type: :utc_datetime]
 
 # Configure the endpoint

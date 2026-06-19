@@ -21,7 +21,7 @@ defmodule PersonalSpace.MixProject do
   def application do
     [
       mod: {PersonalSpace.Application, []},
-      extra_applications: [:logger, :runtime_tools]
+      extra_applications: [:logger, :runtime_tools, :eventstore, :ssl]
     ]
   end
 
@@ -68,7 +68,8 @@ defmodule PersonalSpace.MixProject do
       {:bandit, "~> 1.5"},
       {:commanded, "~> 1.4"},
       {:commanded_eventstore_adapter, "~> 1.4"},
-      {:commanded_ecto_projections, "~> 1.4"}
+      {:commanded_ecto_projections, "~> 1.4"},
+      {:telegram_ex, "~> 1.2.0"}
     ]
   end
 

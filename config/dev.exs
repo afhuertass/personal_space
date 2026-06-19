@@ -1,11 +1,13 @@
 import Config
-
 # Configure your database
+
 config :personal_space, PersonalSpace.Repo,
-  username: "personal_space",
-  password: "fly",
-  hostname: "localhost",
-  database: "personal_space_dev",
+  stacktrace: true,
+  show_sensitive_data_on_connection_error: true,
+  pool_size: 10
+
+config :personal_space, PersonalSpace.CommandedEventStore,
+  serializer: Commanded.Serialization.JsonSerializer,
   stacktrace: true,
   show_sensitive_data_on_connection_error: true,
   pool_size: 10

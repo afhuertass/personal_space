@@ -11,6 +11,6 @@ defmodule PersonalSpace.Zones.Events.AircraftEntered do
     :baro_altitude,
     :on_ground,
     :velocity,
-    :occurred_at
+    :entered_at
   ]
 end

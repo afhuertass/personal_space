@@ -8,6 +8,14 @@ defmodule PersonalSpace.Application do
   @impl true
   def start(_type, _args) do
     children = [
+      # Poller process
+      PersonalSpace.AircraftPoller,
+
+      # event sourcing guys
+      PersonalSpace.CommandedApp,
+      PersonalSpace.CommandedSupervisor,
+
+      ###
       PersonalSpaceWeb.Telemetry,
       PersonalSpace.Repo,
       {DNSCluster, query: Application.get_env(:personal_space, :dns_cluster_query) || :ignore},
