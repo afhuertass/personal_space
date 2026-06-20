@@ -9,6 +9,9 @@ import Config
 
 config :elixir, :time_zone_database, Tz.TimeZoneDatabase
 
+config :personal_space, PersonalSpace.CommandedEventStore,
+  serializer: Commanded.Serialization.JsonSerializer
+
 config :personal_space,
   ecto_repos: [PersonalSpace.Repo],
   event_stores: [PersonalSpace.CommandedEventStore],
