@@ -72,63 +72,6 @@ defmodule PersonalSpace.Zones.Aggregates.Zone do
     all_events ++ exited_events
   end
 
-  # Create entered event
-  # @impl Aggregate
-  # def execute(
-  #       %Zone{tracked_aircraft: tracked_aircraft},
-  #       %RegisterEntry{} = cmd
-  #     ) do
-  #   # if the plane is in the tracked state already, do nothing
-  #   if MapSet.member?(tracked_aircraft, cmd.icao24) do
-  #     {:ok, []}
-  #   end
-  #
-  #   event = %AircraftEntered{
-  #     zone_id: cmd.zone_id,
-  #     icao24: cmd.icao24,
-  #     origin_country: cmd.origin_country,
-  #     time_position: cmd.time_position,
-  #     last_contact: cmd.last_contact,
-  #     longitude: cmd.longitude,
-  #     latitude: cmd.latitude,
-  #     baro_altitude: cmd.baro_altitude,
-  #     on_ground: cmd.on_ground,
-  #     velocity: cmd.velocity,
-  #     entered_at: DateTime.utc_now()
-  #   }
-  #
-  #   event
-  # end
-
-  # Create left event
-  # @impl Aggregate
-  # def execute(
-  #       %Zone{tracked_aircraft: tracked_aircraft},
-  #       %RegisterExit{} = cmd
-  #     ) do
-  #   # if the plane is in the tracked state already, do nothing
-  #   event =
-  #     if MapSet.member?(tracked_aircraft, cmd.icao24) do
-  #       event = %AircraftExited{
-  #         zone_id: cmd.zone_id,
-  #         icao24: cmd.icao24,
-  #         origin_country: cmd.origin_country,
-  #         time_position: cmd.time_position,
-  #         last_contact: cmd.last_contact,
-  #         longitude: cmd.longitude,
-  #         latitude: cmd.latitude,
-  #         baro_altitude: cmd.baro_altitude,
-  #         on_ground: cmd.on_ground,
-  #         velocity: cmd.velocity,
-  #         occurred_at: DateTime.utc_now()
-  #       }
-  #
-  #       event
-  #     end
-  #
-  #   event
-  # end
-
   ## State mutators
 
   @impl Aggregate

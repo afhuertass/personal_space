@@ -38,6 +38,16 @@ defmodule PersonalSpace.Zones.Queries do
     end
   end
 
+  def countries_count_past24h() do
+    since = DateTime.utc_now() |> DateTime.add(-24, :hour)
+    countries_count_since(since)
+  end
+
+  def countries_count_past12h() do
+    since = DateTime.utc_now() |> DateTime.add(-12, :hour)
+    countries_count_since(since)
+  end
+
   # --- private ---
 
   defp fetch_since(since) do
@@ -50,6 +60,19 @@ defmodule PersonalSpace.Zones.Queries do
     )
     |> Enum.map(fn {icao24, country, lat, lon, entered_at} ->
       {icao24, country, {lat, lon}, entered_at}
+    end)
+  end
+
+  defp countries_count_since(since) do
+    Repo.all(
+      from a in AircraftsEnter,
+        where: a.entered_at >= ^since,
+        group_by: a.origin_country,
+        order_by: [desc: count(a.origin_country)],
+        select: {a.origin_country, count(a.origin_country)}
+    )
+    |> Enum.map(fn {country, count} ->
+      {country, count}
     end)
   end
 

@@ -10,7 +10,7 @@ defmodule PersonalSpace.Application do
     children = [
       PersonalSpace.Repo,
       # Poller process
-      PersonalSpace.AircraftPoller,
+      #      PersonalSpace.AircraftPoller,
 
       # TelegranBot server
       PersonalSpace.Bot,

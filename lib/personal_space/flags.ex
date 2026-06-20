@@ -27,8 +27,10 @@ defmodule PersonalSpace.CountryFlags do
     "Turkey" => "🇹🇷",
     "Ukraine" => "🇺🇦",
     "Colombia" => "🇨🇴",
+    "Russian Federation" => "🇷🇺",
+    "Malta" => "🇲🇹", 
+    "Kingdom of the Netherlands" => "🇳🇱"
   }
 
   def get(country), do: Map.get(@flags, country, "🏳️")
 end
-

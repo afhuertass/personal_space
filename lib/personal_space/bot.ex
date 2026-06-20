@@ -34,7 +34,7 @@ defmodule PersonalSpace.Bot do
 
   # /24h
   def handle_message(%{text: "/24h", chat: chat}, context) do
-    aircrafts = Queries.aircrafts_past24h()
+    aircrafts = Queries.aircrafts_past24h() |> Enum.take(10)
 
     text = format_aircraft_list(aircrafts, "past 24 hours")
 
@@ -45,7 +45,7 @@ defmodule PersonalSpace.Bot do
 
   # /12h
   def handle_message(%{text: "/12h", chat: chat}, context) do
-    aircrafts = Queries.aircrafts_past12h()
+    aircrafts = Queries.aircrafts_past12h() |> Enum.take(10)
 
     text = format_aircraft_list(aircrafts, "past 12 hours")
 
@@ -70,7 +70,43 @@ defmodule PersonalSpace.Bot do
     |> Message.send(chat["id"])
   end
 
+  def handle_message(%{text: "/countries12h", chat: chat}, context) do
+    country_counts = Queries.countries_count_past12h()
+
+    message = format_country_counts_list(country_counts, "12h")
+
+    context |> Message.text(message) |> Message.send(chat["id"])
+  end
+
+  def handle_message(%{text: "/countries24h", chat: chat}, context) do
+    country_counts = Queries.countries_count_past24h() |> Enum.take(10)
+    IO.inspect(country_counts)
+
+    message = format_country_counts_list(country_counts, "24h")
+
+    context |> Message.text(message) |> Message.send(chat["id"])
+  end
+
   # --- private helpers ---
+
+  defp format_country_counts_list([], period) do
+    "No aircraft detected in the #{period} 😴"
+  end
+
+  defp format_country_counts_list(country_counts, period) when is_list(country_counts) do
+    header = "✈️ *Aircraft in the #{period}:* #{length(country_counts)} countries entering\n\n"
+
+    rows =
+      country_counts
+      |> Enum.map(fn {country, count} ->
+        flag = CountryFlags.get(country)
+
+        "🛩 '#{country}' #{flag}- # #{count} "
+      end)
+      |> Enum.join("\n")
+
+    header <> rows
+  end
 
   defp format_aircraft_list([], period) do
     "No aircraft detected in the #{period} 😴"
