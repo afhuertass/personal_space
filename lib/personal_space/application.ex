@@ -8,6 +8,7 @@ defmodule PersonalSpace.Application do
   @impl true
   def start(_type, _args) do
     children = [
+      PersonalSpace.Repo,
       # Poller process
       PersonalSpace.AircraftPoller,
 
@@ -20,7 +21,6 @@ defmodule PersonalSpace.Application do
 
       ###
       PersonalSpaceWeb.Telemetry,
-      PersonalSpace.Repo,
       {DNSCluster, query: Application.get_env(:personal_space, :dns_cluster_query) || :ignore},
       {Phoenix.PubSub, name: PersonalSpace.PubSub},
       # Start a worker by calling: PersonalSpace.Worker.start_link(arg)
