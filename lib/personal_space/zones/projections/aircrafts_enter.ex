@@ -2,6 +2,7 @@ defmodule PersonalSpace.Zones.Projections.AircraftsEnter do
   use Ecto.Schema
 
   schema "zone_entries" do
+    field :event_id, :binary_id
     field :zone_id, :string
     field :icao24, :string
     field :origin_country, :string

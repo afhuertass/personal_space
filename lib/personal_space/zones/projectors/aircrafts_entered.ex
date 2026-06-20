@@ -7,7 +7,7 @@ defmodule PersonalSpace.Zones.Projectors.AircraftsEntered do
     repo: PersonalSpace.Repo,
     name: "zone_entries"
 
-  project(%AircraftEntered{} = event, _meta, fn multi ->
+  project(%AircraftEntered{} = event, meta, fn multi ->
     entered_at =
       case event.entered_at do
         # already a DateTime, use as-is
@@ -21,6 +21,7 @@ defmodule PersonalSpace.Zones.Projectors.AircraftsEntered do
       end
 
     project = %Aircraft_projection{
+      event_id: meta.event_id,
       zone_id: event.zone_id,
       icao24: event.icao24,
       origin_country: event.origin_country,
@@ -30,6 +31,9 @@ defmodule PersonalSpace.Zones.Projectors.AircraftsEntered do
       longitude: event.longitude
     }
 
-    Ecto.Multi.insert(multi, :zone_entries, project)
+    Ecto.Multi.insert(multi, :zone_entries, project,
+      on_conflict: :nothing,
+      conflict_target: :event_id
+    )
   end)
 end
