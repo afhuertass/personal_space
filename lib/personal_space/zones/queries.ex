@@ -48,7 +48,84 @@ defmodule PersonalSpace.Zones.Queries do
     countries_count_since(since)
   end
 
+  def yesterday_summary() do
+    {yesterday_start, yesterday_end} = yesterday_range()
+
+    total_flights =
+      Repo.aggregate(
+        from(a in AircraftsEnter,
+          where: a.entered_at >= ^yesterday_start,
+          where: a.entered_at < ^yesterday_end
+        ),
+        :count
+      )
+
+    total_countries =
+      Repo.one(
+        from a in AircraftsEnter,
+          where: a.entered_at >= ^yesterday_start,
+          where: a.entered_at < ^yesterday_end,
+          select: count(a.origin_country, :distinct)
+      )
+
+    {most_common, most_common_count} =
+      Repo.one(
+        from a in AircraftsEnter,
+          where: a.entered_at >= ^yesterday_start,
+          where: a.entered_at < ^yesterday_end,
+          group_by: a.origin_country,
+          order_by: [desc: count(a.origin_country)],
+          limit: 1,
+          select: {a.origin_country, count(a.origin_country)}
+      )
+
+    {busiest_hour, busiest_count} =
+      Repo.one(
+        from a in AircraftsEnter,
+          where: a.entered_at >= ^yesterday_start,
+          where: a.entered_at < ^yesterday_end,
+          group_by: fragment("date_part('hour', ?)", a.entered_at),
+          order_by: [desc: count(a.icao24)],
+          limit: 1,
+          select: {fragment("date_part('hour', ?)", a.entered_at), count(a.icao24)}
+      )
+
+    {furthest_icao, furthest_country, furthest_lat, furthest_lon} =
+      Repo.all(
+        from a in AircraftsEnter,
+          where: a.entered_at >= ^yesterday_start,
+          where: a.entered_at < ^yesterday_end,
+          distinct: a.icao24,
+          select: {a.icao24, a.origin_country, a.latitude, a.longitude}
+      )
+      |> Enum.max_by(fn {_, _, lat, lon} ->
+        haversine_km({lat, lon}, {@home_lat, @home_lon})
+      end)
+
+    furthest_distance =
+      haversine_km({furthest_lat, furthest_lon}, {@home_lat, @home_lon})
+      |> Float.round(1)
+
+    hour_int = trunc(busiest_hour)
+    next_hour = hour_int + 1
+
+    %{
+      total_flights: total_flights,
+      total_countries: total_countries,
+      most_common: {most_common, most_common_count},
+      furthest: {furthest_icao, furthest_country, furthest_distance},
+      busiest_hour: {"#{hour_int}:00–#{next_hour}:00", busiest_count}
+    }
+  end
+
   # --- private ---
+  defp yesterday_range() do
+    today = DateTime.utc_now() |> DateTime.truncate(:second)
+    yesterday = DateTime.add(today, -1, :day)
+    start = %{yesterday | hour: 0, minute: 0, second: 0}
+    finish = %{yesterday | hour: 23, minute: 59, second: 59}
+    {start, finish}
+  end
 
   defp fetch_since(since) do
     Repo.all(

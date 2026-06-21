@@ -87,7 +87,36 @@ defmodule PersonalSpace.Bot do
     context |> Message.text(message) |> Message.send(chat["id"])
   end
 
+  @impl true
+  def handle_message(%{text: "/summary", chat: chat}, context) do
+    summary_data = Queries.yesterday_summary()
+    summary_formatted = format_summary(summary_data)
+
+    context |> Message.text(summary_formatted) |> Message.send(chat["id"])
+  end
+
   # --- private helpers ---
+  defp format_summary(%{
+         total_flights: total,
+         total_countries: countries,
+         most_common: {country, count},
+         furthest: {icao, f_country, km},
+         busiest_hour: {hour_range, hour_count}
+       }) do
+    flag = PersonalSpace.CountryFlags.get(country)
+    furthest_flag = PersonalSpace.CountryFlags.get(f_country)
+
+    """
+    📊 *Yesterday's Airspace Summary*
+    ━━━━━━━━━━━━━━━━━━━━
+    ✈️  #{total} flights detected
+    🌍  #{countries} countries
+    🏆  Most common: #{flag} #{country}  - (#{count})
+    🔭  Furthest: `#{icao}` #{furthest_flag} #{f_country} — #{km} km
+    🕐  Busiest hour: #{hour_range} - (#{hour_count} flights)
+    ━━━━━━━━━━━━━━━━━━━━
+    """
+  end
 
   defp format_country_counts_list([], period) do
     "No aircraft detected in the #{period} 😴"
