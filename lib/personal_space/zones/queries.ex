@@ -154,6 +154,9 @@ defmodule PersonalSpace.Zones.Queries do
   end
 
   # Haversine formula — returns distance in km between two {lat, lon} points
+  defp haversine_km({nil, _}, _), do: 0.0
+  defp haversine_km({_, nil}, _), do: 0.0
+
   defp haversine_km({lat1, lon1}, {lat2, lon2}) do
     # Earth radius in km
     r = 6371
