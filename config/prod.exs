@@ -13,7 +13,7 @@ config :personal_space, PersonalSpaceWeb.Endpoint,
 # Note `:force_ssl` is required to be set at compile-time.
 config :personal_space, PersonalSpaceWeb.Endpoint,
   force_ssl: [
-    rewrite_on: [:x_forwarded_proto],
+    # rewrite_on: [:x_forwarded_proto],
     exclude: [
       # paths: ["/health"],
       hosts: ["localhost", "127.0.0.1"]
