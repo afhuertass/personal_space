@@ -12,6 +12,7 @@ defmodule PersonalSpaceWeb.Router do
 
   pipeline :api do
     plug :accepts, ["json"]
+    get "/flights/geojson", FlightController, :geojson
   end
 
   scope "/", PersonalSpaceWeb do

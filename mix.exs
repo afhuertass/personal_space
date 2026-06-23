@@ -70,7 +70,8 @@ defmodule PersonalSpace.MixProject do
       {:commanded_eventstore_adapter, "~> 1.4"},
       {:commanded_ecto_projections, "~> 1.4"},
       {:telegram_ex, "~> 1.2.0"},
-      {:tz, "~> 0.28"}
+      {:tz, "~> 0.28"},
+      {:cors_plug, "~> 3.0"}
     ]
   end
 

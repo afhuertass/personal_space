@@ -4,7 +4,6 @@ defmodule PersonalSpace.Bot do
   alias PersonalSpace.Zones.Queries
 
   alias PersonalSpace.CountryFlags
-  # /start
 
   def handle_message(%{"message" => %{"text" => "/start", "chat" => chat}}, context) do
     context
@@ -93,6 +92,14 @@ defmodule PersonalSpace.Bot do
     summary_formatted = format_summary(summary_data)
 
     context |> Message.text(summary_formatted) |> Message.send(chat["id"])
+  end
+
+  def handle_message(%{text: "/map", chat: chat}, context) do
+
+    link = PersonalSpace.KeplerLink.generate()
+    context
+    |> Message.text("🗺 [Open interactive map](#{link})")
+    |> Message.send(chat["id"])
   end
 
   # --- private helpers ---
