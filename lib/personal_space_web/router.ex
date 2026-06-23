@@ -12,7 +12,6 @@ defmodule PersonalSpaceWeb.Router do
 
   pipeline :api do
     plug :accepts, ["json"]
-    get "/flights/geojson", FlightController, :geojson
   end
 
   scope "/", PersonalSpaceWeb do
@@ -21,10 +20,10 @@ defmodule PersonalSpaceWeb.Router do
     get "/", PageController, :home
   end
 
-  # Other scopes may use custom stacks.
-  # scope "/api", PersonalSpaceWeb do
-  #   pipe_through :api
-  # end
+  scope "/api", PersonalSpaceWeb do
+    pipe_through :api
+    get "/flights/geojson", FlightController, :geojson
+  end
 
   # Enable LiveDashboard and Swoosh mailbox preview in development
   if Application.compile_env(:personal_space, :dev_routes) do
