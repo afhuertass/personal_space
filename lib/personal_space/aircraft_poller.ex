@@ -1,5 +1,6 @@
 defmodule PersonalSpace.AircraftPoller do
   ## this module is a gen server, it's job is to fetch the data from the opensky api and emmits the commands
+  require Logger
 
   alias PersonalSpace.Zones.Commands.RegisterAirSpace
 
@@ -39,8 +40,8 @@ defmodule PersonalSpace.AircraftPoller do
         {:ok, _} ->
           :ok
 
-        {:error, _reason} ->
-          Logger.warning("Error dispatching the command waiting until next cycle")
+        {:error, reason} ->
+          Logger.warning("Dispatch failed: #{inspect(reason)}, will retry next poll")
       end
 
       Process.send_after(self(), :poll, state.interval_ms)
