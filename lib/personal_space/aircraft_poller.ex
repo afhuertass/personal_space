@@ -3,7 +3,7 @@ defmodule PersonalSpace.AircraftPoller do
 
   alias PersonalSpace.Zones.Commands.RegisterAirSpace
 
-  defstruct interval_ms: :timer.seconds(30),
+  defstruct interval_ms: :timer.seconds(60),
             zone_id: "EFHK"
 
   use GenServer
@@ -35,7 +35,14 @@ defmodule PersonalSpace.AircraftPoller do
         aircrafts: aircrafts
       }
 
-      PersonalSpace.CommandedApp.dispatch(command)
+      case PersonalSpace.CommandedApp.dispatch(command) do
+        {:ok, _} ->
+          :ok
+
+        {:error, _reason} ->
+          Logger.warning("Error dispatching the command waiting until next cycle")
+      end
+
       Process.send_after(self(), :poll, state.interval_ms)
       {:noreply, state}
     end
