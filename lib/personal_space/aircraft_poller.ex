@@ -25,7 +25,7 @@ defmodule PersonalSpace.AircraftPoller do
     aircrafts = query_aicrafts()
 
     # only try to emit the command if there is aircrafts
-    if length(aircrafts) == 0 do
+    if Enum.empty?(aircrafts) do
       IO.inspect("No aicrafts detected")
 
       Process.send_after(self(), :poll, state.interval_ms)
@@ -43,10 +43,10 @@ defmodule PersonalSpace.AircraftPoller do
         {:error, reason} ->
           Logger.warning("Dispatch failed: #{inspect(reason)}, will retry next poll")
       end
-
-      Process.send_after(self(), :poll, state.interval_ms)
-      {:noreply, state}
     end
+
+    Process.send_after(self(), :poll, state.interval_ms)
+    {:noreply, state}
   end
 
   ## helper functions
