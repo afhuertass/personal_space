@@ -10,16 +10,18 @@ defmodule PersonalSpace.Application do
     children = [
       PersonalSpace.Repo,
       # Poller process
-      PersonalSpace.AircraftPoller,
 
       # TelegranBot server
-      PersonalSpace.Bot,
 
       # event sourcing guys
       PersonalSpace.CommandedApp,
       PersonalSpace.CommandedSupervisor,
 
-      ###
+      ### Poller 
+      PersonalSpace.AircraftPoller,
+      PersonalSpace.Bot,
+
+      ## other phoenix stuff
       PersonalSpaceWeb.Telemetry,
       {DNSCluster, query: Application.get_env(:personal_space, :dns_cluster_query) || :ignore},
       {Phoenix.PubSub, name: PersonalSpace.PubSub},
