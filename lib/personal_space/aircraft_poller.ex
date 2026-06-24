@@ -37,11 +37,15 @@ defmodule PersonalSpace.AircraftPoller do
       }
 
       case PersonalSpace.CommandedApp.dispatch(command) do
+        :ok ->
+          :ok
+
         {:ok, _} ->
           :ok
 
         {:error, reason} ->
           Logger.warning("Dispatch failed: #{inspect(reason)}, will retry next poll")
+          :ok
       end
     end
 
