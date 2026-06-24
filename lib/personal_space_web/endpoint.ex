@@ -51,7 +51,11 @@ defmodule PersonalSpaceWeb.Endpoint do
   plug Plug.MethodOverride
   plug Plug.Head
   plug Plug.Session, @session_options
-  plug PersonalSpaceWeb.Router
 
-  plug CORSPlug, origin: ["https://kepler.gl"]
+  # ["https://kepler.gl"]
+  plug CORSPlug,
+    origin: ["https://kepler.gl", "https://demo.kepler.gl", "*"],
+    methods: ["GET", "OPTIONS"]
+
+  plug PersonalSpaceWeb.Router
 end
