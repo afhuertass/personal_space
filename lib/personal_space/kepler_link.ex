@@ -3,7 +3,7 @@ defmodule PersonalSpace.KeplerLink do
 
   def generate(hours \\ 24) do
     data_url =
-      "http://dg06h8difqv1i4716lwtfj69.89.167.124.166.sslip.io/api/flights/geojson?hours=#{hours}"
+      "http://dg06h8difqv1i4716lwtfj69.89.167.124.166.sslip.io/api/flights/geojson"
 
     encoded = URI.encode(data_url)
     "#{@base_url}?mapUrl=#{encoded}"
