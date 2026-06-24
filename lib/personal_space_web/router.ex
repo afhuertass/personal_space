@@ -23,6 +23,8 @@ defmodule PersonalSpaceWeb.Router do
   scope "/api", PersonalSpaceWeb do
     pipe_through :api
     get "/flights/geojson", FlightController, :geojson
+    # <-- add this
+    get "/flights/flights.geojson", FlightController, :geojson
   end
 
   # Enable LiveDashboard and Swoosh mailbox preview in development
