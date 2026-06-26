@@ -2,9 +2,14 @@ defmodule PersonalSpace.Zones.Queries do
   import Ecto.Query
   alias PersonalSpace.Repo
   alias PersonalSpace.Zones.Projections.AircraftsEnter
+  alias PersonalSpace.Zones.Projections.AircraftsCurrent
 
   @home_lat String.to_float(System.get_env("HOME_LAT", "0.0"))
   @home_lon String.to_float(System.get_env("HOME_LON", "0.0"))
+
+  def current_airspace() do
+    Repo.all(AircraftsCurrent)
+  end
 
   def aircrafts_past1h() do
     since = DateTime.utc_now() |> DateTime.add(-1, :hour)

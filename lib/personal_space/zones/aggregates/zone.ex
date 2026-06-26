@@ -5,14 +5,13 @@ defmodule PersonalSpace.Zones.Aggregates.Zone do
   alias Commanded.Aggregates.Aggregate
   ## Commands alias
 
-  alias PersonalSpace.Zones.Commands.RegisterEntry, as: RegisterEntry
-  alias PersonalSpace.Zones.Commands.RegisterExit, as: RegisterExit
   alias PersonalSpace.Zones.Commands.RegisterAirSpace, as: RegisterAirSpace
 
   ## Alias the events 
 
   alias PersonalSpace.Zones.Events.AircraftEntered, as: AircraftEntered
   alias PersonalSpace.Zones.Events.AircraftExited, as: AircraftExited
+  alias PersonalSpace.Zones.Events.AircraftLogged, as: AircraftLogged
 
   @behaviour Aggregate
 
@@ -39,6 +38,24 @@ defmodule PersonalSpace.Zones.Aggregates.Zone do
             on_ground: aircraft_data.on_ground,
             velocity: aircraft_data.velocity,
             entered_at: DateTime.utc_now()
+          }
+
+          event
+        else
+          # If the aicraft IS in the map, emit not an AircraftEnteredEvent but a AircraftLogged event, this 
+          # would help me track the current airspace not just the entered ones. 
+          event = %AircraftLogged{
+            zone_id: cmd.zone_id,
+            icao24: callsign,
+            origin_country: aircraft_data.origin_country,
+            time_position: aircraft_data.time_position,
+            last_contact: aircraft_data.last_contact,
+            longitude: aircraft_data.longitude,
+            latitude: aircraft_data.latitude,
+            baro_altitude: aircraft_data.baro_altitude,
+            on_ground: aircraft_data.on_ground,
+            velocity: aircraft_data.velocity,
+            logged_at: DateTime.utc_now()
           }
 
           event
@@ -94,5 +111,15 @@ defmodule PersonalSpace.Zones.Aggregates.Zone do
       | zone: event.zone_id,
         tracked_aircraft: MapSet.delete(tracked_aircraft, event.icao24)
     }
+  end
+
+  # the LoggedAircraft events doesn't update the state of the aggregator
+  @impl Aggregate
+  def apply(
+        %Zone{tracked_aircraft: _tracked_aircraft} = state,
+        %AircraftLogged{} = _event
+      ) do
+    ## when aircraft enters the zone, add to the state
+    state
   end
 end
