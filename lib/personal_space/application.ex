@@ -19,7 +19,6 @@ defmodule PersonalSpace.Application do
 
       ### Poller 
       PersonalSpace.AircraftPoller,
-      PersonalSpace.Bot,
 
       ## other phoenix stuff
       PersonalSpaceWeb.Telemetry,
@@ -28,7 +27,8 @@ defmodule PersonalSpace.Application do
       # Start a worker by calling: PersonalSpace.Worker.start_link(arg)
       # {PersonalSpace.Worker, arg},
       # Start to serve requests, typically the last entry
-      PersonalSpaceWeb.Endpoint
+      PersonalSpaceWeb.Endpoint,
+      PersonalSpace.Bot
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
