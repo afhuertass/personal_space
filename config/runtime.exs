@@ -1,8 +1,5 @@
 import Config
 
-config :telegram_ex,
-  apersonal_space: System.fetch_env!("TELEGRAM_TOKEN")
-
 if System.get_env("PHX_SERVER") do
   config :personal_space, PersonalSpaceWeb.Endpoint, server: true
 end
@@ -28,6 +25,9 @@ if config_env() == :prod do
     end
 
   maybe_ipv6 = if System.get_env("ECTO_IPV6") in ~w(true 1), do: [:inet6], else: []
+
+  config :telegram_ex,
+    apersonal_space: System.fetch_env!("TELEGRAM_TOKEN")
 
   config :personal_space, PersonalSpace.Repo,
     url: database_url,

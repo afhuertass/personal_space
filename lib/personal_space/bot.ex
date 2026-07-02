@@ -95,14 +95,22 @@ defmodule PersonalSpace.Bot do
   end
 
   def handle_message(%{text: "/map", chat: chat}, context) do
-
     link = PersonalSpace.KeplerLink.generate()
+
     context
     |> Message.text("🗺 [Open interactive map](#{link})")
     |> Message.send(chat["id"])
   end
 
   # --- private helpers ---
+  defp format_summary(nil) do
+    "📊 No data available for yesterday 😴"
+  end
+
+  defp format_summary(%{total_flights: 0}) do
+    "📊 No flights detected yesterday 😴"
+  end
+
   defp format_summary(%{
          total_flights: total,
          total_countries: countries,

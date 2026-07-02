@@ -1,5 +1,7 @@
 import Config
 # Configure your database
+config :telegram_ex,
+  apersonal_space: System.get_env("TELEGRAM_TOKEN", "dev-token-placeholder")
 
 config :personal_space, PersonalSpace.Repo,
   stacktrace: true,
