@@ -26,9 +26,6 @@ if config_env() == :prod do
 
   maybe_ipv6 = if System.get_env("ECTO_IPV6") in ~w(true 1), do: [:inet6], else: []
 
-  config :telegram_ex,
-    apersonal_space: System.fetch_env!("TELEGRAM_TOKEN")
-
   config :personal_space, PersonalSpace.Repo,
     url: database_url,
     ssl: ssl_opts,
@@ -45,6 +42,9 @@ if config_env() == :prod do
     connect_timeout: 60_000,
     queue_target: 10_000,
     queue_interval: 60_000
+
+  config :telegram_ex,
+    apersonal_space: System.fetch_env!("TELEGRAM_TOKEN")
 
   secret_key_base =
     System.get_env("SECRET_KEY_BASE") ||
