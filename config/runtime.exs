@@ -20,11 +20,18 @@ if config_env() == :prod do
     System.get_env("DATABASE_URL_EVENTSTORE") ||
       raise "DATABASE_URL_EVENTSTORE is missing"
 
+  ssl_opts =
+    if System.get_env("DB_SSL", "false") == "true" do
+      [verify: :verify_none]
+    else
+      false
+    end
+
   maybe_ipv6 = if System.get_env("ECTO_IPV6") in ~w(true 1), do: [:inet6], else: []
 
   config :personal_space, PersonalSpace.Repo,
     url: database_url,
-    ssl: [verify: :verify_none],
+    ssl: ssl_opts,
     pool_size: String.to_integer(System.get_env("POOL_SIZE") || "10"),
     connect_timeout: 60_000,
     queue_target: 10_000,
@@ -33,7 +40,7 @@ if config_env() == :prod do
 
   config :personal_space, PersonalSpace.CommandedEventStore,
     url: database_url_eventstore,
-    ssl: [verify: :verify_none],
+    ssl: ssl_opts,
     pool_size: String.to_integer(System.get_env("POOL_SIZE") || "10"),
     connect_timeout: 60_000,
     queue_target: 10_000,
