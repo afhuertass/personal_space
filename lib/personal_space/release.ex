@@ -23,6 +23,8 @@ defmodule PersonalSpace.Release do
   def init_event_store do
     load_app()
     config = PersonalSpace.CommandedEventStore.config()
+
+    :ok = EventStore.Tasks.Create.exec(config, [])
     :ok = EventStore.Tasks.Init.exec(config, [])
   end
 
