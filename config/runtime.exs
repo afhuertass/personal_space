@@ -57,5 +57,6 @@ if config_env() == :prod do
   config :personal_space, PersonalSpaceWeb.Endpoint,
     url: [host: host, port: 443, scheme: "https"],
     http: [ip: {0, 0, 0, 0, 0, 0, 0, 0}],
-    secret_key_base: secret_key_base
+    secret_key_base: secret_key_base,
+    check_origin: false
 end

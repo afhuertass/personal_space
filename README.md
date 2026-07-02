@@ -7,14 +7,14 @@ PersonalSpace is a Phoenix-based application designed for managing and tracking 
 - **Aircraft Tracking**: Monitor aircraft movements in and out of defined airspace zones.
 - **Event-Driven Architecture**: Uses CQRS (Command Query Responsibility Segregation) and Event Sourcing to maintain a robust and auditable history of aircraft operations.
 - **Real-time Updates**: Changes are propagated via the Event Sourcing architecture, and projections in the DB reflect the changes in the event streams.
-- **Telegram Integration**: Includes functionality for interacting with the system via Telegram. The Telegram bot can be reached out at @APersonalSpaceBot
+- **Telegram Integration**: Includes functionality for interacting with the system via Telegram. The Telegram bot can be reached out at [Personal Space Bot](https://t.me/APersonalSpaceBot)
 
 ## Technical Stack
 
 - **Framework**: [Phoenix Framework](https://www.phoenixframework.org/)
 - **Language**: [Elixir](https://elixir-lang.org/)
 - **Event Sourcing/CQRS**: [Commanded](https://commanded.io/)
-- **Database**: [PostgreSQL](https://www.postgresql.org/) with [Ecto](https://hexdocs.pm/ecto/Ecto.html) for my demo I used a Neon database.
+- **Database**: [PostgreSQL](https://www.postgresql.org/) with [Ecto](https://hexdocs.pm/ecto/Ecto.html) The deployment is hosted in a Hetzner VPS.
 - **Telegram API**: `telegram_ex`
 
 ## Getting Started
@@ -36,9 +36,9 @@ PersonalSpace is a Phoenix-based application designed for managing and tracking 
    ```bash
 
 
-   DATABASE_URL=""
+   DATABASE_URL="postgresql://postgres:postgres@localhost:5433/personal_space"
 
-   DATABASE_URL_EVENTSTORE=""
+   DATABASE_URL_EVENTSTORE="postgresql://postgres:postgres@localhost:5433/personal_space_eventstore"
 
    OPENSKY_CLIENT_ID=""
    OPENSKY_SECRET=""
@@ -49,6 +49,12 @@ PersonalSpace is a Phoenix-based application designed for managing and tracking 
 
    HOME_LAT=0.0
    HOME_LON=0.0
+   ```
+
+   Local database developmnet is helped via docker compose:
+
+   ```bash
+   docker compose up -d
    ```
 
    One must also run all the migrations and `mix ecto.drop && mix ecto.create && mix ecto.migrate` as well as the migrations for the eventstore `mix event_store.drop && mix event_store.create && mix event_store.init`
