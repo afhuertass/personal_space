@@ -1,17 +1,28 @@
 defmodule PersonalSpaceWeb.MapLive do
   use PersonalSpaceWeb, :live_view
-
+  import Ecto.Query
   alias PersonalSpace.Zones.Queries
-  alias PersonalSpace.Zones.Projections.CurrentAirspace
 
   @zone_id "EFHK"
+  @refresh_interval 30_000
 
   def mount(_params, _session, socket) do
+    if connected?(socket), do: schedule_refresh()
     aircrafts = Queries.current_airspace()
-
     {:ok, assign(socket, aircrafts: aircrafts, zone_id: @zone_id)}
   end
 
+  def handle_info(:refresh, socket) do
+    aircrafts = Queries.current_airspace()
+    schedule_refresh()
+    {:noreply, assign(socket, aircrafts: aircrafts)}
+  end
+
+  defp schedule_refresh do
+    Process.send_after(self(), :refresh, @refresh_interval)
+  end
+
+  # private functions
   defp format_aircrafts(aircrafts) do
     Enum.map(aircrafts, fn a ->
       %{
@@ -24,6 +35,10 @@ defmodule PersonalSpaceWeb.MapLive do
       }
     end)
   end
+
+  # defp schedule_refresh do
+  #   Process.send_after(self(), :refresh, @refresh_interval)
+  # end
 
   defp format_altitude(nil), do: "N/A"
   defp format_altitude(alt), do: "#{round(alt)}m"

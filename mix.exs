@@ -72,6 +72,12 @@ defmodule PersonalSpace.MixProject do
       {:telegram_ex, "~> 1.2.0"},
       {:tz, "~> 0.28"},
       {:cors_plug, "~> 3.0"}
+      # {:electric, "~> 1.0"},
+      # # {:phoenix_sync, "~> 0.6", override: true}
+      # {:phoenix_sync, github: "electric-sql/phoenix_sync", override: true}
+      # {:electric, "~> 1.1"},
+      # {:electric_client, "~> 0.8"},
+      # {:phoenix_sync, github: "electric-sql/phoenix_sync", override: true}
     ]
   end
 

@@ -3,11 +3,15 @@ import Config
 
 config :personal_space, PersonalSpace.Repo,
   stacktrace: true,
+  ssl: false,
+  url: "ecto://postgres:postgres@localhost:5433/personal_space",
   show_sensitive_data_on_connection_error: true,
   pool_size: 10
 
 config :personal_space, PersonalSpace.CommandedEventStore,
   serializer: Commanded.Serialization.JsonSerializer,
+  ssl: false,
+  url: "ecto://postgres:postgres@localhost:5433/personal_space_eventstore",
   stacktrace: true,
   show_sensitive_data_on_connection_error: true,
   pool_size: 10

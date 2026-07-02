@@ -10,44 +10,34 @@ end
 config :personal_space, PersonalSpaceWeb.Endpoint,
   http: [port: String.to_integer(System.get_env("PORT", "4000"))]
 
-# Shared across dev and prod
-database_url =
-  System.get_env("DATABASE_URL") ||
-    raise "DATABASE_URL is missing"
-
-database_url_eventstore =
-  System.get_env("DATABASE_URL_EVENTSTORE") ||
-    raise "DATABASE_URL_EVENTSTORE is missing"
-
-config :personal_space, PersonalSpace.Repo,
-  url: database_url,
-  ssl: true,
-  ssl_opts: [
-    verify: :verify_none
-  ],
-  pool_size: String.to_integer(System.get_env("POOL_SIZE") || "10"),
-  # 60s to allow Neon to wake up
-  connect_timeout: 60_000,
-  queue_target: 10_000,
-  queue_interval: 60_000
-
-config :personal_space, PersonalSpace.CommandedEventStore,
-  url: database_url_eventstore,
-  ssl: true,
-  ssl_opts: [
-    verify: :verify_none
-  ],
-  pool_size: String.to_integer(System.get_env("POOL_SIZE") || "10"),
-  # 60s to allow Neon to wake up
-  connect_timeout: 60_000,
-  queue_target: 10_000,
-  queue_interval: 60_000
-
 # Production-only config
 if config_env() == :prod do
+  database_url =
+    System.get_env("DATABASE_URL") ||
+      raise "DATABASE_URL is missing"
+
+  database_url_eventstore =
+    System.get_env("DATABASE_URL_EVENTSTORE") ||
+      raise "DATABASE_URL_EVENTSTORE is missing"
+
   maybe_ipv6 = if System.get_env("ECTO_IPV6") in ~w(true 1), do: [:inet6], else: []
 
-  config :personal_space, PersonalSpace.Repo, socket_options: maybe_ipv6
+  config :personal_space, PersonalSpace.Repo,
+    url: database_url,
+    ssl: [verify: :verify_none],
+    pool_size: String.to_integer(System.get_env("POOL_SIZE") || "10"),
+    connect_timeout: 60_000,
+    queue_target: 10_000,
+    queue_interval: 60_000,
+    socket_options: maybe_ipv6
+
+  config :personal_space, PersonalSpace.CommandedEventStore,
+    url: database_url_eventstore,
+    ssl: [verify: :verify_none],
+    pool_size: String.to_integer(System.get_env("POOL_SIZE") || "10"),
+    connect_timeout: 60_000,
+    queue_target: 10_000,
+    queue_interval: 60_000
 
   secret_key_base =
     System.get_env("SECRET_KEY_BASE") ||
