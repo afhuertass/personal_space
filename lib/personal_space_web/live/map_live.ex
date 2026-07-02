@@ -4,7 +4,7 @@ defmodule PersonalSpaceWeb.MapLive do
   alias PersonalSpace.Zones.Queries
 
   @zone_id "EFHK"
-  @refresh_interval 30_000
+  @refresh_interval 1_000
 
   def mount(_params, _session, socket) do
     if connected?(socket), do: schedule_refresh()

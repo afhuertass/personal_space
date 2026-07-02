@@ -18,6 +18,20 @@ defmodule PersonalSpace.Release do
     {:ok, _, _} = Ecto.Migrator.with_repo(repo, &Ecto.Migrator.run(&1, :down, to: version))
   end
 
+  ## event store release
+
+  def init_event_store do
+    load_app()
+    config = PersonalSpace.CommandedEventStore.config()
+    :ok = EventStore.Tasks.Init.exec(config, [])
+  end
+
+  def create_event_store do
+    load_app()
+    config = PersonalSpace.CommandedEventStore.config()
+    :ok = EventStore.Tasks.Create.exec(config, [])
+  end
+
   defp repos do
     Application.fetch_env!(@app, :ecto_repos)
   end
